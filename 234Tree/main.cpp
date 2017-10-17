@@ -9,6 +9,28 @@
 #include <iostream>
 #include "fileStreamUtils.hpp"
 
+#define INSTR 0
+#define INSERT 'i'
+#define DELETE 'd'
+#define SEARCH 's'
+
+void parseUserInput(string input){
+    char instr = input[INSTR];
+    input.erase(INSTR, 1);
+    
+    switch(instr){
+        case INSERT:
+            cout << "INSERT : " << input << endl; break;
+        case DELETE:
+            cout << "DELETE : " << input << endl; break;
+        case SEARCH:
+            cout << "SEARCH : " << input << endl; break;
+        default:
+            cout << "잘못된 명령어입니다." << endl; break;
+    }
+    
+}
+
 int main(int argc, const char * argv[]) {
 
     fileStreamUtils treeController;
@@ -22,6 +44,7 @@ int main(int argc, const char * argv[]) {
     
     queue<string> q = treeController.queueingInputs();
     while (!q.empty()) {
+        parseUserInput(q.front());
         treeController.saveStr(q.front());
         q.pop();
     }

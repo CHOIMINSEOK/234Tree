@@ -44,8 +44,6 @@ int fileStreamUtils::openInputStream(string fileName){
         fileInputStream.read(oriFileContents, size);
         oriFileContents[size] = 0;
         
-        cout << oriFileContents << endl;
-        
     } else {
         return -1;
     }
