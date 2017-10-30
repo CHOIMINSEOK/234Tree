@@ -12,7 +12,7 @@
 #include <iostream>
 #include <queue>
 #include "node.hpp"
-// 메모리 해제하는거 추가해야함.
+
 class tree {
 private:
     node* root = 0;
@@ -20,6 +20,7 @@ private:
         
 public:
     tree();
+    ~tree(); // 메모리 해제하는거 추가해야함.
     node* search(int ele);
     node* getInsertNode(int ele);
     int insert(int ele);

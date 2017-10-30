@@ -23,13 +23,13 @@ node::node(int* eles, node** cd){
     elements[SIZE] = eles[SIZE];
     if(cd[0]!=NULL){
         children[0] = cd[0];
-        children[0]->setParent(this);
+        children[0]->parent = this;
     }
     for (int i=1; i<=elements[SIZE]; i++) {
         elements[i] = eles[i];
         if(cd[i]){
             children[i] = cd[i];
-            children[i]->setParent(this);
+            children[i]->parent = this;
         }
     }
 }
@@ -111,17 +111,15 @@ int node::split(){
 
     node* child1 = new node(ele1, cd1);
     q.push(child1);
-    //    child1.printAllElements();
 
     // 두번째 split
     ele2[SIZE] = 1;
     ele2[1] = elements[4];
     cd2[0] = children[3];
     cd2[1] = children[4];
-
+    
     node* child2 = new node(ele2, cd2);
     q.push(child2);
-    //    child2.printAllElements();
 
     return elements[3];
 }
@@ -129,7 +127,6 @@ int node::split(){
 int node::addChild(node* n){
     if (q.empty()) return -1;
 
-//    node** children = n->getChildrenAll();
     int idxFirstNull = 0;
 
     while(1){

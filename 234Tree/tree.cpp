@@ -17,16 +17,19 @@ node* tree::search(int ele){
     
     while (searchNode != NULL) {
         int* eles = searchNode->getElementsAll();
-        for (int i=1; i<eles[SIZE]+1; i++) {
+        int i=1;
+        for (; i<eles[SIZE]+1; i++) {
             if (ele > eles[i]) continue;
-            else if(ele == eles[i]) return searchNode;
-            else {
-                searchNode = searchNode -> getChildrenAll()[i-1];
-                break;
+            else if(ele == eles[i]) {
+                cout << "exist" << endl;
+                return searchNode;
             }
+            else break;
         }
+        searchNode = searchNode -> getChildrenAll()[i-1];
     }
     
+    cout << "no exist" << endl;
     return searchNode;
 }
 

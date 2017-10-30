@@ -54,7 +54,7 @@ int main(int argc, const char * argv[]) {
     
     tree t;
 
-    for (int i=1; i<20; i++) {
+    for (int i=1; i<200; i++) {
         int randomNumber = rand()%365;
         cout << "insert : " << randomNumber << endl;
         t.insert(randomNumber);
@@ -62,10 +62,13 @@ int main(int argc, const char * argv[]) {
         cout << "======" << endl;
     }
     
-    t.insert(16);
+    for (int i=0; i<20; i++) {
+        int r = rand()%365;
+        cout << "search : " << r << endl;
+        t.search(r);
+    }
+    
     t.show();
-
-//    cout << "node split : " << n.split() << endl;
     
     return 0;
 }
