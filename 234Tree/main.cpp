@@ -8,6 +8,10 @@
 
 #include <iostream>
 #include "fileStreamUtils.hpp"
+#include "node.hpp"
+#include "tree.hpp"
+
+#include <cstdlib>
 
 #define INSTR 0
 #define INSERT 'i'
@@ -32,22 +36,36 @@ void parseUserInput(string input){
 }
 
 int main(int argc, const char * argv[]) {
+//    fileStreamUtils treeController;
+//    if(treeController.openInputStream("input.txt") == -1) {
+//        cout << "파일이 존재하지 않습니다. " << endl;
+//    }
+//
+//    if(treeController.openOutputStream("output.txt") == -1){
+//        cout << "output.txt를 생성하는데 문제가 발생했습니다." << endl;
+//    }
+//
+//    queue<string> q = treeController.queueingInputs();
+//    while (!q.empty()) {
+//        parseUserInput(q.front());
+//        treeController.saveStr(q.front());
+//        q.pop();
+//    }
+    
+    tree t;
 
-    fileStreamUtils treeController;
-    if(treeController.openInputStream("input.txt") == -1) {
-        cout << "파일이 존재하지 않습니다. " << endl;
+    for (int i=1; i<20; i++) {
+        int randomNumber = rand()%365;
+        cout << "insert : " << randomNumber << endl;
+        t.insert(randomNumber);
+        t.show();
+        cout << "======" << endl;
     }
     
-    if(treeController.openOutputStream("output.txt") == -1){
-        cout << "output.txt를 생성하는데 문제가 발생했습니다." << endl;
-    }
-    
-    queue<string> q = treeController.queueingInputs();
-    while (!q.empty()) {
-        parseUserInput(q.front());
-        treeController.saveStr(q.front());
-        q.pop();
-    }
+    t.insert(16);
+    t.show();
+
+//    cout << "node split : " << n.split() << endl;
     
     return 0;
 }
