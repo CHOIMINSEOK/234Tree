@@ -54,21 +54,43 @@ int main(int argc, const char * argv[]) {
     
     tree t;
 
-    for (int i=1; i<200; i++) {
-        int randomNumber = rand()%365;
-        cout << "insert : " << randomNumber << endl;
-        t.insert(randomNumber);
-        t.show();
-        cout << "======" << endl;
+    for (int i=0; i<25; i++) {
+        t.insert(i);
     }
     
-    for (int i=0; i<20; i++) {
-        int r = rand()%365;
-        cout << "search : " << r << endl;
-        t.search(r);
-    }
-    
+    // transfer에서 children들이 잘 이동됬는지는 확인못함.
     t.show();
+    t.deleteE(24);
+    t.show();
+    t.deleteE(22);
+    t.show();
+    t.deleteE(3);
+    t.show();
+    t.deleteE(4);
+    t.show();
+    t.deleteE(5);
+    t.show();
+    t.deleteE(17);
+    t.show();
+//    t.deleteE(5);
+//    t.show();
+//    t.deleteE(2);
+//    t.show();
+//    for (int i=1; i<200; i++) {
+//        int randomNumber = rand()%365;
+//        cout << "insert : " << randomNumber << endl;
+//        t.insert(randomNumber);
+//        t.show();
+//        cout << "======" << endl;
+//    }
+//
+//    for (int i=0; i<20; i++) {
+//        int r = rand()%365;
+//        cout << "search : " << r << endl;
+//        t.search(r);
+//    }
+//
+//    t.show();
     
     return 0;
 }

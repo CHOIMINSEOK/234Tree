@@ -33,12 +33,21 @@ public:
     
     node* getParent();
     void setParent(node* n);
+    
     int* getElementsAll();
     node** getChildrenAll();
     int getFirstElement();
+    int getIdxOnParent();
     int getSize();
+    
+    node* getSibling();
+    
+    
     int addElement(int ele);
     int split();
+    
+    int eliminateElement(int ele);
+    int changeElement(int ori, int src);
     
     static int addChild(node* n);
     

@@ -23,7 +23,11 @@ public:
     ~tree(); // 메모리 해제하는거 추가해야함.
     node* search(int ele);
     node* getInsertNode(int ele);
+    node* getSuccessorNode(node* n, int ele);
+    
     int insert(int ele);
+    int deleteE(int ele);
+    
     int show();
 };
 #endif /* tree_hpp */
