@@ -186,7 +186,6 @@ int node::addElementByIdx(int ele, int idx){
  *  - 상위 클래스 tree에 의해서
  *    항상 삭제할 element가 존재하는 node에서만 호출됨을 보장받는다.
  */
-//XXX : 같은 element를 삭제할때, 맨뒤 element를 삭제하려고했지만 앞의 element가 삭제될 잠재적 버그가 있다.
 int node::eliminateElement(int ele){
     int size = elements[SIZE];
     

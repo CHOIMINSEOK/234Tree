@@ -55,7 +55,6 @@ node* tree::search(int ele){
         for (; i<eles[SIZE]+1; i++) {
             if (ele > eles[i]) continue;
             else if(ele == eles[i]) {
-//                cout << "exist" << endl;
                 return searchNode;
             }
             else break;
@@ -63,7 +62,6 @@ node* tree::search(int ele){
         searchNode = searchNode -> getChild(i-1);
     }
     
-//    cout << "no exist" << endl;
     return searchNode;
 }
 
@@ -141,11 +139,6 @@ int tree::deleteE(int ele){
     int successorNodeSize = successor->getSize();
     // internal node에 삭제할 element가 존재하는 경우
     // => successor leaf와 element change
-//    if(n!=successor){
-//        int successEle = successor->getElementsAll()[successorNodeSize];
-//        n->changeElement(ele, successEle);
-//        successor->changeElement(successEle, ele);
-//    }
     if (n!=successor) {
         int successEle = successor->changeElementByIdx(successorNodeSize, ele);
         n->changeElement(ele, successEle);
@@ -153,8 +146,6 @@ int tree::deleteE(int ele){
     } else {
         successor->eliminateElement(ele);
     }
-    
-//    successor->eliminateElementByIdx(successorNodeSize);
     
     if (successorNodeSize==2 || successorNodeSize==3 || successor == root) return 0;
     
@@ -171,7 +162,6 @@ int tree::deleteE(int ele){
         // transferOffset>0 이면 sibling은 right sibling이다.
         int transferOffset = (siblingIdxOnParent - nodeIdxOnParent + 1)/2;
         int parentEleIdx = nodeIdxOnParent + transferOffset;
-//        int transferEleFromParent = n->getParent()->getElementsAll()[nodeIdxOnParent+transferOffset];
         
         if (sibling->getSize()!=1) {
             //transfer
@@ -183,7 +173,6 @@ int tree::deleteE(int ele){
             if (transferOffset>0) {
                 n->addChild(1, transferChildFromSibling);
             } else {
-//                n->addChild(1, n->getChild(0));
                 n->addChild(0, transferChildFromSibling);
             }
             
@@ -193,9 +182,6 @@ int tree::deleteE(int ele){
             node* leftNode  = transferOffset>0 ? n : sibling;
             node* rightNode = transferOffset>0 ? sibling : n;
             
-            //XXX : eliminateElement호출에서 같은 value를 가지는 다른 element를 삭제하면서 의도하지않은 다른 child node가 삭제되는 버그가 존재한다.
-            // => 같은 값을 가지는 element를 삭제할 때 어떤 것을 삭제해야하는지에 대한 정책이 필요하다.
-            // => 그에따라 마지막 test case에서 size=0인 node가 추가되었는데 show()에서 정상적인 출력을 보인다. 원인파악이 필요하다.
             int transferEleFromParent = leftNode->getParent()->eliminateElementByIdx(parentEleIdx, FOR_FUSION);
             leftNode->addElementByIdx(transferEleFromParent, leftNode->getSize());
             leftNode->addChild(leftNode->getSize(), rightNode->getChild(0));
@@ -233,12 +219,10 @@ string tree::show(){
             node* p = q.front(); q.pop();
             if (p==NULL) {
                 ret += "/";
-//                cout << "/";
                 p = q.front(); q.pop();
             }
             
             ret += p->getStringAllElements();
-//            cout << p->getStringAllElements();
             
             if(p->getChild(0) == NULL) continue;
             
@@ -251,7 +235,6 @@ string tree::show(){
         }
         q.pop();
         ret += "\n";
-//        cout << endl;
         floorNum = childFloorNum;
     }
     return ret;
