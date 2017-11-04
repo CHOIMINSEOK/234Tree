@@ -98,7 +98,7 @@ int tree::insert(int ele){
         node::addChildFromQueue(parent);
         
         // 메모리 해제해야 하는 경우가 더 있는지 확인해봐야한다.
-        // - 4노드를 초과하는 경우 -> split한 후에 original node를 delete
+        // - 4노드를 초과하는 경우 -> split한 후에 original node를 메모리 해제
         delete [] insertNode;
         
         insertNode = parent;
@@ -130,7 +130,6 @@ node* tree::getSuccessorNode(node* n, int ele){
  *  return :
  *    -1 -> no exist
  */
-//TODO : 중복되는 코드 정리
 int tree::deleteE(int ele){
     node* n = search(ele);
     if (n==NULL) return -1;
