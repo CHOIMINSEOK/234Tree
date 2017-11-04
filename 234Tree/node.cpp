@@ -35,6 +35,9 @@ node::node(int* eles, node** cd){
 }
 
 string node::getStringAllElements(){
+    if (elements[SIZE]==0) {
+        return "elements가 존재하지 않습니다.";
+    }
     string e = "(";
     int i=1;
     for (; i<elements[SIZE]; i++) {
@@ -52,6 +55,33 @@ void node::setParent(node* n){
     parent = n;
 }
 
+/*
+ *  - 상위클래스 tree에 의하여
+ *    input parameter idx의 유효성을 보장받는다.
+ */
+node* node::getChild(int idx){
+    return children[idx];
+}
+/*
+ *  - 외부에서 child node가 추가되는 경우에는 delete의 fusion 경우뿐이다.
+ *  (insert의 split된 node는 addChildFromQueue에서 처리)
+ *  => fusion case에도 child는 맨 앞 index 또는 맨 뒤 index에 추가되는 경우만 존재한다.
+ *  - element의 유효성에 관여하지 않는다.
+ *  - 추가된 child와 관계하는 element는 tree에 의해 추가됨을 보장받는다.
+ */
+node* node::addChild(int idx, node* child){
+    int i = elements[SIZE];
+    for (; i>=idx; i--) {
+        children[i+1] = children[i];
+        children[i] = NULL;
+        
+    }
+    
+    children[idx] = child;
+    if(child!=NULL) children[idx]->parent = this;
+    return 0;
+}
+
 int* node::getElementsAll(){
     return elements;
 }
@@ -64,7 +94,7 @@ int node::getIdxOnParent(){
     int myidx = 0;
     
     while (1) {
-        if(parent->getChildrenAll()[myidx]==this) break;
+        if(parent->getChild(myidx)==this) break;
         myidx++;
     }
     return myidx;
@@ -72,6 +102,13 @@ int node::getIdxOnParent(){
 
 int node::getSize(){
     return elements[SIZE];
+}
+
+/*
+ *  - 자신을 포함한 sibling node의 갯수를 반환합니다.
+ */
+int node::getSiblingNum(){
+    return parent->getSize()+1;
 }
 
 int node::getFirstElement(){
@@ -85,21 +122,22 @@ int node::getFirstElement(){
  *
  *  - sibling 중 3,4 node가 우선 순위를 갖고 반환된다.
  */
-//TODO : 좀더 깔끔하게 정리할것, parent->getChildrenAll 보기 않좋음
 node* node::getSibling(){
     int myidx = getIdxOnParent();
     
-    if(myidx==0) return parent->getChildrenAll()[myidx+1];
+    if(myidx==0) return parent->getChild(myidx+1);
     
-    if (myidx==parent->getSize()) return parent->getChildrenAll()[myidx-1];
+    if (myidx==parent->getSize()) return parent->getChild(myidx-1);
     
-    int siblingOffset = parent->getChildrenAll()[myidx+1]->getSize() > parent->getChildrenAll()[myidx-1]->getSize() ? 1 : -1;
-    return parent->getChildrenAll()[myidx+siblingOffset];
+    int siblingOffset = parent->getChild(myidx+1)->getSize() > parent->getChild(myidx-1)->getSize() ? 1 : -1;
+    return parent->getChild(myidx+siblingOffset);
 }
 
 /*
  * return
  * : -1 -> 노드 입력범위 초과
+ *  - children의 유효성에 대해 관여하지 않는다.
+ *  - 추가된 element에 의해 빈 children은 tree 의해 채워짐을 보장받는다.
  */
 int node::addElement(int ele){
     if(elements[SIZE]==4) return -1;
@@ -122,36 +160,79 @@ int node::addElement(int ele){
     return 0;
 }
 
+int node::addElementByIdx(int ele, int idx){
+    int i = elements[SIZE];
+    for (; i>idx; i--) {
+        if (elements[i] >= ele) {
+            elements[i+1] = elements[i];
+        
+            children[i+1] = children[i];
+            children[i] = NULL;
+            continue;
+        }
+        else break;
+    }
+    
+    elements[i+1] = ele;
+    elements[SIZE]++;
+    return 0;
+}
+
+
 /*
  *  return :
  *      -1 -> element가 존재하지않음
  *
- *  - 예외처리는 해놓았으나, 이 함수는 상위 클래스 tree에 의해서
+ *  - 상위 클래스 tree에 의해서
  *    항상 삭제할 element가 존재하는 node에서만 호출됨을 보장받는다.
  */
+//XXX : 같은 element를 삭제할때, 맨뒤 element를 삭제하려고했지만 앞의 element가 삭제될 잠재적 버그가 있다.
 int node::eliminateElement(int ele){
     int size = elements[SIZE];
     
     if(size==0) return -1;
-
-    for (int i=1; i<size; i++) {
+    int i=1;
+    for (; i<size; i++) {
         if (elements[i]<ele) continue;
         
         elements[i] = elements[i+1];
-        if(children[i] != NULL) {
-            children[i] = children[i+1];
-            children[i+1] = NULL;
-        }
-    }
     
+        children[i] = children[i+1];
+        children[i+1] = NULL;
+        
+    }
     elements[SIZE]--;
     
     return 0;
 }
 
 /*
+ *  - 같은 element가 존재할 때 생기는 이슈로 인해 idx로 element를 삭제하는 function 추가
+ */
+int node::eliminateElementByIdx(int idx, int direc){
+    int size = elements[SIZE];
+    int dltedEle = elements[idx];
+    
+    for (int i=idx; i<size+1; i++) {
+        elements[i] = elements[i+1];
+        if (direc==FOR_FUSION) {
+            children[i] = children[i+1];
+            children[i+1] = NULL;
+        } else {
+            if (i==size && direc==FOR_TRANSFER_RIGHT) break;
+            children[i-1] = children[i];
+            children[i] = NULL;
+        }
+
+    }
+    elements[SIZE]--;
+    
+    return dltedEle;
+}
+
+/*
  *  - 상위클래스 tree에 의해서
- *    항상 대체될 element가 존재하는 node에서만 호출됨을 보장받는다.
+ *    대체될 element가 항상 존재하는 leaf node에서만 호출됨을 보장받는다.
  */
 int node::changeElement(int ori, int src){
     int size = elements[SIZE];
@@ -166,9 +247,19 @@ int node::changeElement(int ori, int src){
 }
 
 /*
+ *  - 같은 element가 존재할 때 생기는 이슈로 인해 idx로 element를 변경하는 function 추가
+ */
+int node::changeElementByIdx(int oriIdx, int src){
+    int oriEle = elements[oriIdx];
+    elements[oriIdx] = src;
+    
+    return oriEle;
+}
+
+/*
  * - 상위클래스 tree에 의해서
  *   elements의 사이즈가 5인 node에서만 호출됨을 보장받는다.
- * - split된 node는 node class의 static queue에 저장되어서 addChild 함수에서 쓰인다.
+ * - split된 node는 node class의 static queue에 저장되어서 addChildFromQueue 함수에서 쓰인다.
  */
 int node::split(){
     int ele1[3], ele2[2];
@@ -196,8 +287,10 @@ int node::split(){
     
     return elements[3];
 }
-
-int node::addChild(node* n){
+/*
+ *  - split된 node들을 queue에서 꺼내 input node의 children으로 연결한다.
+ */
+int node::addChildFromQueue(node* n){
     if (q.empty()) return -1;
 
     int idxFirstNull = 0;
@@ -219,8 +312,6 @@ int node::addChild(node* n){
         n->children[idxFirstNull]->setParent(n);
 
     }
-
-    
     return 0;
 }
 

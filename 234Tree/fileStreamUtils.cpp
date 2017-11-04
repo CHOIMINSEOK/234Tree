@@ -10,7 +10,7 @@
 
 int fileStreamUtils::saveStr(string str){
     if (fileOutputStream.is_open()) {
-        fileOutputStream << str + "\n" << endl;
+        fileOutputStream << str << endl;
         return 0;
     } else return -1;
 }
