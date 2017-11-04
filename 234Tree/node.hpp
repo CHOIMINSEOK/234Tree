@@ -13,6 +13,10 @@
 #include <queue>
 #include <string>
 #define SIZE 0
+#define FOR_TRANSFER_RIGHT 0
+#define FOR_TRANSFER_LEFT  1
+#define FOR_FUSION         2
+
 
 using namespace std;
 
@@ -33,23 +37,29 @@ public:
     
     node* getParent();
     void setParent(node* n);
+    node* getChild(int idx);
+    node* addChild(int idx, node* child);
     
     int* getElementsAll();
     node** getChildrenAll();
     int getFirstElement();
     int getIdxOnParent();
     int getSize();
+    int getSiblingNum();
     
     node* getSibling();
     
     
     int addElement(int ele);
+    int addElementByIdx(int ele, int idx);
     int split();
     
     int eliminateElement(int ele);
+    int eliminateElementByIdx(int idx, int direc);
     int changeElement(int ori, int src);
+    int changeElementByIdx(int oriIdx, int src);
     
-    static int addChild(node* n);
+    static int addChildFromQueue(node* n);
     
 };
 

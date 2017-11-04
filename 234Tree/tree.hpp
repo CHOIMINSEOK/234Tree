@@ -12,6 +12,7 @@
 #include <iostream>
 #include <queue>
 #include "node.hpp"
+#include "fileStreamUtils.hpp"
 
 class tree {
 private:
@@ -20,7 +21,7 @@ private:
         
 public:
     tree();
-    ~tree(); // 메모리 해제하는거 추가해야함.
+    ~tree();
     node* search(int ele);
     node* getInsertNode(int ele);
     node* getSuccessorNode(node* n, int ele);
@@ -28,6 +29,6 @@ public:
     int insert(int ele);
     int deleteE(int ele);
     
-    int show();
+    string show();
 };
 #endif /* tree_hpp */
