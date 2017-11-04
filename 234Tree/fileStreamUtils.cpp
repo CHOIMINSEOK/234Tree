@@ -10,7 +10,7 @@
 
 int fileStreamUtils::saveStr(string str){
     if (fileOutputStream.is_open()) {
-        fileOutputStream << str + "\n" << endl;
+        fileOutputStream << str << endl;
         return 0;
     } else return -1;
 }
@@ -43,8 +43,6 @@ int fileStreamUtils::openInputStream(string fileName){
         fileInputStream.seekg(0, ios::beg);
         fileInputStream.read(oriFileContents, size);
         oriFileContents[size] = 0;
-        
-        cout << oriFileContents << endl;
         
     } else {
         return -1;
